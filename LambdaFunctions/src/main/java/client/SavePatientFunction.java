@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static java.util.Objects.nonNull;
+
 /**
  * Handler for requests to Lambda function.
  */
@@ -23,14 +25,30 @@ public class SavePatientFunction implements RequestHandler<PatientRequest, Objec
         final Map<String, AttributeValue> data = new HashMap<>();
         final Map<String, String> response = new HashMap<>();
         final UUID uuid = UUID.randomUUID();
+
         response.put("clientId", uuid.toString());
-        data.put("patient_id", new AttributeValue().withS(uuid.toString()));
-        data.put("contact", new AttributeValue().withBOOL(Boolean.valueOf(input.contact)));
-        data.put("coughing", new AttributeValue().withBOOL(Boolean.valueOf(input.coughing)));
-        data.put("fever", new AttributeValue().withBOOL(Boolean.valueOf(input.fever)));
-        data.put("otherSymptoms", new AttributeValue().withBOOL(Boolean.valueOf(input.otherSymptoms)));
-        data.put("regionAtRisk", new AttributeValue().withBOOL(Boolean.valueOf(input.regionAtRisk)));
-        data.put("phoneNumber", new AttributeValue().withS(input.phoneNumber));
+
+        data.put("clientId", new AttributeValue().withS(uuid.toString()));
+
+        if (nonNull(input.contact)) {
+            data.put("contact", new AttributeValue().withBOOL(Boolean.valueOf(input.contact)));
+        }
+        if (nonNull(input.coughing)) {
+            data.put("coughing", new AttributeValue().withBOOL(Boolean.valueOf(input.coughing)));
+        }
+        if (nonNull(input.fever)) {
+            data.put("fever", new AttributeValue().withBOOL(Boolean.valueOf(input.fever)));
+        }
+        if (nonNull(input.otherSymptoms)) {
+            data.put("otherSymptoms", new AttributeValue().withBOOL(Boolean.valueOf(input.otherSymptoms)));
+        }
+        if (nonNull(input.regionAtRisk)) {
+            data.put("regionAtRisk", new AttributeValue().withBOOL(Boolean.valueOf(input.regionAtRisk)));
+        }
+        if (nonNull(input.phoneNumber)) {
+            data.put("phoneNumber", new AttributeValue().withS(input.phoneNumber));
+        }
+
         db.putItem(new PutItemRequest(DYNAMODB_TABLE_NAME, data));
 
         return response;
