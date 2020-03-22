@@ -28,7 +28,7 @@ public class SavePatientFunction implements RequestHandler<PatientRequest, Objec
 
         response.put("clientId", uuid.toString());
 
-        data.put("clientId", new AttributeValue().withS(uuid.toString()));
+        data.put("patient_id", new AttributeValue().withS(uuid.toString()));
 
         if (nonNull(input.contact)) {
             data.put("contact", new AttributeValue().withBOOL(Boolean.valueOf(input.contact)));
